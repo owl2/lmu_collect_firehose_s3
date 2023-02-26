@@ -1,0 +1,4 @@
+locals {
+    firehose_assumerole = fileexists("${path.module}/files/assume_role/firehose.json") ? file("${path.module}/files/assume_role/firehose.json") : "NULL"
+    lmu_firehose_s3_policy = fileexists("${path.module}/files/policy/lmu_firehose_s3.json") ? templatefile("${path.module}/files/policy/lmu_firehose_s3.json", { s3_bucket_arn = aws_s3_bucket.firehose_destination_bucket.arn, account_id = data.aws_caller_identity.current.account_id, region = data.aws_region.current.name, log_group_name = aws_cloudwatch_log_group.lmu_kinesis_firehose_s3.name, log_stream_name = aws_cloudwatch_log_stream.lmu_kinesis_firehose_s3.name }) : "NULL"
+}
